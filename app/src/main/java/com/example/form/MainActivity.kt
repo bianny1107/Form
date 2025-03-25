@@ -55,6 +55,30 @@ class MainActivity : ComponentActivity() {
         }else{
             Toast.makeText(this, "Cada campo debe ser rellenado", Toast.LENGTH_LONG).show()
         }
+        dataBase.close()
+    }
+
+    fun buscar(view: View){
+        val conexion = SQLite(this, "tienda", null, 1)
+        val dataBase = conexion.writableDatabase
+
+        val codigo = txtcodigo?.text.toString()
+        if(codigo.isEmpty() == false){
+            val fila=dataBase.rawQuery("select descripcion, precio from productos where codigo= '$codigo'", null)
+            if(fila.moveToFirst() == true){
+                txtdescripcion?.setText(fila.getString(0))
+                txtprecio?.setText(fila.getString(1))
+
+                dataBase.close()
+
+            }else{
+                txtdescripcion?.setText(" ")
+                txtprecio?.setText(" ")
+
+
+                Toast.makeText(this, "Registro no encontrado", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }
 
